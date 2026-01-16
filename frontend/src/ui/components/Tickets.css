@@ -5,10 +5,11 @@
 }
 
 .tickets-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 24px;
+}
+
+.tickets-header button {
+  width: 100%;
 }
 
 .tickets-header h1 {
@@ -62,7 +63,7 @@
   background: white;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -71,7 +72,7 @@
 }
 
 .ticket-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .ticket-main {
@@ -107,24 +108,24 @@
   white-space: nowrap;
 }
 
-.status-open { 
-  background: #e3f2fd; 
-  color: #1976d2; 
+.status-open {
+  background: #e3f2fd;
+  color: #1976d2;
 }
 
-.status-inprogress { 
-  background: #fff3e0; 
-  color: #f57c00; 
+.status-inprogress {
+  background: #fff3e0;
+  color: #f57c00;
 }
 
-.status-review { 
-  background: #f3e5f5; 
-  color: #7b1fa2; 
+.status-review {
+  background: #f3e5f5;
+  color: #7b1fa2;
 }
 
-.status-done { 
-  background: #e8f5e9; 
-  color: #388e3c; 
+.status-done {
+  background: #e8f5e9;
+  color: #388e3c;
 }
 
 /* Modal Overlay */
@@ -218,19 +219,23 @@
   display: flex;
   flex-direction: row;
   overflow-y: auto;
-  flex: 1; /* Take remaining height */
-  max-height: calc(90vh - 70px); /* fallback */
+  flex: 1;
+  /* Take remaining height */
+  max-height: calc(90vh - 70px);
+  /* fallback */
 }
 
 .ticket-left-col {
-  flex: 4; /* 40% width approx */
+  flex: 4;
+  /* 40% width approx */
   padding: 24px;
   border-right: 1px solid #eee;
   min-width: 300px;
 }
 
 .ticket-right-col {
-  flex: 5; /* 60% width to allow space for content */
+  flex: 5;
+  /* 60% width to allow space for content */
   padding: 24px;
   background: #fafafa;
 }
@@ -250,7 +255,10 @@
   cursor: pointer;
   color: #999;
 }
-.close-btn:hover { color: #333; }
+
+.close-btn:hover {
+  color: #333;
+}
 
 /* User Pill */
 .user-pill {
@@ -274,7 +282,8 @@
 
 .todo-item {
   display: flex;
-  align-items: center; /* Center Vertically */
+  align-items: center;
+  /* Center Vertically */
   gap: 12px;
   font-size: 14px;
   padding: 8px 12px;
@@ -282,14 +291,14 @@
   background: white;
   border: 1px solid transparent;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   position: relative;
 }
 
 .todo-item:hover {
   background: #fff;
   border-color: #e0e0e0;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transform: translateY(-1px);
 }
 
@@ -305,7 +314,8 @@
   cursor: pointer;
   position: relative;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 .todo-item input[type="checkbox"]:checked {
@@ -349,12 +359,14 @@
   font-size: 16px;
   padding: 4px;
   border-radius: 4px;
-  opacity: 0; /* Hide by default */
+  opacity: 0;
+  /* Hide by default */
   transition: all 0.2s;
 }
 
 .todo-item:hover .remove-todo {
-  opacity: 1; /* Show on hover */
+  opacity: 1;
+  /* Show on hover */
 }
 
 .remove-todo:hover {
@@ -371,9 +383,10 @@
   border-radius: 8px;
   margin-top: 12px;
   font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.2s;
-  border: 1px solid transparent; /* default invisible border */
+  border: 1px solid transparent;
+  /* default invisible border */
 }
 
 .new-todo-input::placeholder {
@@ -415,7 +428,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.attachment-item a:hover { color: #1473e6; }
+
+.attachment-item a:hover {
+  color: #1473e6;
+}
 
 .att-size {
   font-size: 11px;
@@ -446,6 +462,7 @@
   color: #6a1b9a;
   box-shadow: 0 2px 4px rgba(106, 27, 154, 0.1);
 }
+
 .ai-btn:hover {
   background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 100%);
   transform: translateY(-1px);
@@ -456,6 +473,7 @@
   cursor: pointer;
   color: #333;
 }
+
 .upload-btn:hover {
   background: #f5f5f5;
 }
@@ -468,6 +486,7 @@
   border-bottom: 1px solid #eaeaea;
   padding-bottom: 8px;
 }
+
 .section-header h4 {
   margin: 0;
   font-size: 14px;
@@ -490,6 +509,7 @@
   gap: 12px;
   margin: 16px 0;
 }
+
 .modal-grid-compact label {
   font-size: 11px;
   text-transform: uppercase;
@@ -502,11 +522,13 @@
   .ticket-modal-body {
     flex-direction: column;
   }
+
   .ticket-left-col {
     border-right: none;
     border-bottom: 1px solid #eee;
     padding: 16px;
   }
+
   .ticket-right-col {
     padding: 16px;
   }

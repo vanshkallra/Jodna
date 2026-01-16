@@ -67,7 +67,7 @@ const Projects = ({ user, sandboxProxy }) => {
   return (
     <div className="projects-container">
       <div className="projects-header">
-        <h1>Projects</h1>
+
         {canCreateProject && (
           <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
             + New Project

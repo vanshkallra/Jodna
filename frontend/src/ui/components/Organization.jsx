@@ -42,7 +42,7 @@ const Organization = ({ organization, user, onLeave }) => {
       await axios.post(`${BACKEND_URL}/api/organizations/leave`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       // Call onLeave callback to update parent state and redirect
       if (onLeave) {
         onLeave();
@@ -60,7 +60,7 @@ const Organization = ({ organization, user, onLeave }) => {
       <div className="organization-header">
         <div className="header-content">
           <div className="header-text">
-            <h1>{organization?.name || 'My Organization'}</h1>
+
             <p>Manage your organization settings and team members</p>
           </div>
           {!isAdmin && (
@@ -95,19 +95,19 @@ const Organization = ({ organization, user, onLeave }) => {
               disabled={refreshing}
               title="Refresh members list"
             >
-              <svg 
-                width="12" 
-                height="12" 
-                viewBox="0 0 16 16" 
-                fill="none" 
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 16 16"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 className={refreshing ? 'spinning' : ''}
               >
-                <path 
-                  d="M13.5 8A5.5 5.5 0 1 1 2.5 8M2.5 8L5 5.5M2.5 8L5 10.5" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
+                <path
+                  d="M13.5 8A5.5 5.5 0 1 1 2.5 8M2.5 8L5 5.5M2.5 8L5 10.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
@@ -153,7 +153,7 @@ const Organization = ({ organization, user, onLeave }) => {
             <div className="modal-body">
               <p>Are you sure you want to leave <strong>{organization?.name}</strong>?</p>
               <p className="warning-text">
-                You will lose access to all projects and tickets in this organization. 
+                You will lose access to all projects and tickets in this organization.
                 You can rejoin later using an invite code.
               </p>
             </div>

@@ -61,6 +61,8 @@ const Header = ({ currentTab, setCurrentTab, user, onLogout }) => {
           </div>
         </button>
 
+        <h1 className="header-title">{currentTab}</h1>
+
         <button
           className="hamburger-button"
           onClick={() => {

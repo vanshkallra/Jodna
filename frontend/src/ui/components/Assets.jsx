@@ -83,26 +83,26 @@ const Assets = ({ user, sandboxProxy, organization }) => {
             // OR pass the URL if the sandbox can handle valid URLs (but localhost URLs might be tricky in some sandbox environments).
             // For Adobe Express Add-ons, passing a Blob or Base64 is often safer if the URL isn't public.
             // Let's try fetching the Blob here and passing it as an ArrayBuffer or Blob.
-            
+
             // NOTE: This part depends on Step 3 (Sandbox Integration). 
             // For now, we will just log or attempt to call the future API.
             console.log("Adding asset to canvas:", asset.name);
-            
+
             // Fetch the image data
             const token = localStorage.getItem('token');
             const response = await axios.get(`${BACKEND_URL}/api/assets/image/${asset._id}`, {
                 responseType: 'blob',
-                 headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             const blob = response.data;
-            
+
             // Convert to ArrayBuffer or Base64 as needed by the sandbox. 
             // Usually sandbox APIs might take a generic object or blob ref.
             // Looking at `sandbox/code.js`, we need to implement `createImage`.
-            
+
             if (sandboxProxy.createImage) {
-                 await sandboxProxy.createImage(blob);
+                await sandboxProxy.createImage(blob);
             } else {
                 console.log("createImage API not yet implemented in sandbox.");
             }
@@ -115,7 +115,7 @@ const Assets = ({ user, sandboxProxy, organization }) => {
     const handleDelete = async (e, assetId) => {
         e.stopPropagation(); // Prevent clicking the card
         console.log("Delete button clicked for asset:", assetId);
-        
+
         // if (!window.confirm("Delete this asset?")) {
         //     console.log("Delete cancelled by user");
         //     return;
@@ -139,14 +139,14 @@ const Assets = ({ user, sandboxProxy, organization }) => {
     return (
         <div className="assets-container">
             <div className="assets-header">
-                <h1>Assets</h1>
+
                 {canUpload && (
                     <>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            style={{ display: 'none' }} 
-                            onChange={handleFileChange} 
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
                             accept="image/*"
                         />
                         <button className="btn-primary btn-upload" onClick={handleUploadClick} disabled={uploading}>
@@ -165,26 +165,26 @@ const Assets = ({ user, sandboxProxy, organization }) => {
             ) : (
                 <div className="assets-grid">
                     {assets.map(asset => (
-                        <div 
-                            key={asset._id} 
-                            className="asset-card" 
+                        <div
+                            key={asset._id}
+                            className="asset-card"
                             onClick={() => handleAssetClick(asset)}
                             title="Click to add to canvas"
                         >
                             <div className="asset-image-container">
                                 {canUpload && (
-                                    <button 
-                                        className="btn-delete" 
+                                    <button
+                                        className="btn-delete"
                                         onClick={(e) => handleDelete(e, asset._id)}
                                         title="Delete Asset"
                                     >
                                         ✕
                                     </button>
                                 )}
-                                <img 
-                                    src={`${BACKEND_URL}/api/assets/image/${asset._id}`} 
-                                    alt={asset.name} 
-                                    className="asset-image" 
+                                <img
+                                    src={`${BACKEND_URL}/api/assets/image/${asset._id}`}
+                                    alt={asset.name}
+                                    className="asset-image"
                                     loading="lazy"
                                 />
                             </div>

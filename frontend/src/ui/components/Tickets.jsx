@@ -7,35 +7,35 @@ const Tickets = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const mockTickets = [
-    { 
-      id: 1, 
-      title: 'Design homepage hero section', 
-      description: 'Create engaging hero design with brand colors', 
-      status: 'Open', 
+    {
+      id: 1,
+      title: 'Design homepage hero section',
+      description: 'Create engaging hero design with brand colors',
+      status: 'Open',
       assignee: 'Jane Doe',
       createdBy: 'Manager Name'
     },
-    { 
-      id: 2, 
-      title: 'Update color palette', 
-      description: 'Refresh brand colors based on new guidelines', 
-      status: 'InProgress', 
+    {
+      id: 2,
+      title: 'Update color palette',
+      description: 'Refresh brand colors based on new guidelines',
+      status: 'InProgress',
       assignee: user.displayName,
       createdBy: 'Manager Name'
     },
-    { 
-      id: 3, 
-      title: 'Create icon set', 
-      description: '20 custom icons needed for dashboard', 
-      status: 'Review', 
+    {
+      id: 3,
+      title: 'Create icon set',
+      description: '20 custom icons needed for dashboard',
+      status: 'Review',
       assignee: 'John Smith',
       createdBy: 'Manager Name'
     },
-    { 
-      id: 4, 
-      title: 'Mobile responsive fixes', 
-      description: 'Fix layout issues on mobile devices', 
-      status: 'Done', 
+    {
+      id: 4,
+      title: 'Mobile responsive fixes',
+      description: 'Fix layout issues on mobile devices',
+      status: 'Done',
       assignee: user.displayName,
       createdBy: 'Manager Name'
     }
@@ -43,8 +43,8 @@ const Tickets = ({ user }) => {
 
   const canCreateTicket = user.role === 'ADMIN' || user.role === 'MANAGER';
 
-  const filteredTickets = filter === 'All' 
-    ? mockTickets 
+  const filteredTickets = filter === 'All'
+    ? mockTickets
     : mockTickets.filter(ticket => ticket.status === filter);
 
   const handleTicketClick = (ticket) => {
@@ -60,7 +60,7 @@ const Tickets = ({ user }) => {
   return (
     <div className="tickets-container">
       <div className="tickets-header">
-        <h1>Tickets</h1>
+
         {canCreateTicket && (
           <button className="btn-primary">+ New Ticket</button>
         )}
@@ -80,8 +80,8 @@ const Tickets = ({ user }) => {
 
       <div className="tickets-list">
         {filteredTickets.map(ticket => (
-          <div 
-            key={ticket.id} 
+          <div
+            key={ticket.id}
             className="ticket-card"
             onClick={() => handleTicketClick(ticket)}
           >
@@ -103,68 +103,68 @@ const Tickets = ({ user }) => {
       {/* MODAL */}
       {isModalOpen && selectedTicket && (
         <div className="modal-overlay" onClick={closeModal}>
-            <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
 
             {/* Header */}
             <div className="modal-header">
-                <h2>{selectedTicket.title}</h2>
-                <span className={`status-badge status-${selectedTicket.status.toLowerCase()}`}>
+              <h2>{selectedTicket.title}</h2>
+              <span className={`status-badge status-${selectedTicket.status.toLowerCase()}`}>
                 {selectedTicket.status}
-                </span>
+              </span>
             </div>
 
             {/* Description */}
             <div className="modal-section">
-                <h4>Description</h4>
-                <p>{selectedTicket.description || 'No description provided.'}</p>
+              <h4>Description</h4>
+              <p>{selectedTicket.description || 'No description provided.'}</p>
             </div>
 
             {/* Details */}
             <div className="modal-grid">
-                <div>
+              <div>
                 <label>Assignee (Designer)</label>
                 <p>{selectedTicket.assignee?.name || selectedTicket.assignee}</p>
-                </div>
+              </div>
 
-                <div>
+              <div>
                 <label>Created By</label>
                 <p>{selectedTicket.created_by?.name || selectedTicket.createdBy}</p>
-                </div>
+              </div>
 
-                <div>
+              <div>
                 <label>Organization</label>
                 <p>{selectedTicket.organization?.name || '—'}</p>
-                </div>
+              </div>
 
-                <div>
+              <div>
                 <label>Created At</label>
                 <p>
-                    {selectedTicket.created_at
+                  {selectedTicket.created_at
                     ? new Date(selectedTicket.created_at).toLocaleString()
                     : '—'}
                 </p>
-                </div>
+              </div>
 
-                <div>
+              <div>
                 <label>Last Updated</label>
                 <p>
-                    {selectedTicket.updated_at
+                  {selectedTicket.updated_at
                     ? new Date(selectedTicket.updated_at).toLocaleString()
                     : '—'}
                 </p>
-                </div>
+              </div>
             </div>
 
             {/* Footer */}
             <div className="modal-footer">
-                <button className="btn-secondary" onClick={closeModal}>
+              <button className="btn-secondary" onClick={closeModal}>
                 Close
-                </button>
+              </button>
             </div>
 
-            </div>
+          </div>
         </div>
-        )}
+      )}
     </div>
   );
 };
