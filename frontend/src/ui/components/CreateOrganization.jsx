@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './CreateOrganization.css';
 
-const BACKEND_URL = '';
+const BACKEND_URL = 'http://localhost:5000';
 
 const CreateOrganization = ({ onOrgCreated, user }) => {
   const [orgName, setOrgName] = useState('');
@@ -25,17 +25,17 @@ const CreateOrganization = ({ onOrgCreated, user }) => {
       setError('Organization name is required');
       return;
     }
-    
+
     setLoading(true);
     setError('');
-    
+
     try {
       const response = await axios.post(
         `${BACKEND_URL}/api/organizations`,
         { name: orgName },
         authConfig()
       );
-      
+
       // Call parent callback with new organization data
       onOrgCreated(response.data);
     } catch (err) {
@@ -69,7 +69,7 @@ const CreateOrganization = ({ onOrgCreated, user }) => {
             />
             {error && <p className="error-message">{error}</p>}
           </div>
-          <button 
+          <button
             onClick={handleSubmit}
             className="btn-primary"
             disabled={loading || !orgName.trim()}

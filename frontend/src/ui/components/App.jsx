@@ -10,6 +10,7 @@ import "./App.css";
 // Import your components
 import Header from "./Header";
 import CreateOrganization from "./CreateOrganization";
+import JoinOrganization from "./JoinOrganization";
 import Home from "./Home";
 import Projects from "./Projects";
 import Tickets from "./Tickets";
@@ -17,7 +18,7 @@ import Organization from "./Organization";
 import NoOrganizationMessage from "./NoOrganizationMessage";
 import Login from "./Login";
 
-const BACKEND_URL = '';
+const BACKEND_URL = 'http://localhost:5000';
 
 const App = ({ addOnUISdk, sandboxProxy }) => {
     const [user, setUser] = useState(null);
@@ -57,8 +58,16 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     };
 
     const fetchOrganization = async (orgId) => {
-        // Returning a placeholder object with ID to satisfy frontend checks
-        return { _id: orgId };
+        try {
+            const token = getToken();
+            const response = await axios.get(`${BACKEND_URL}/api/organizations/my`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            console.error("Error fetching org:", err);
+            return null;
+        }
     };
 
     const initializeApp = async () => {
@@ -160,7 +169,7 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
         );
     }
 
-// Show login page if not authenticated
+    // Show login page if not authenticated
     if (!isAuthenticated) {
         return (
             <Theme system="express" scale="medium" color="light">
@@ -173,9 +182,10 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     console.log('Rendering authenticated view', { user, organization, isAuthenticated });
 
     // Check user role and organization status
-    const isAdmin = user && user.role === 'admin';
+    const isAdmin = user && user.role === 'ADMIN';
     const hasOrganization = organization !== null;
-
+    console.log('isAdmin', isAdmin);
+    console.log('hasOrganization', hasOrganization);
     // Admin without organization -> Create Organization
     if (isAdmin && !hasOrganization) {
         return (
@@ -187,12 +197,12 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
         );
     }
 
-    // Non-admin without organization -> Show message
+    // Non-admin without organization -> Show Join Organization Screen
     if (!isAdmin && !hasOrganization) {
         return (
             <Theme system="express" scale="medium" color="light">
                 <div className="app-container">
-                    <NoOrganizationMessage />
+                    <JoinOrganization onOrgJoined={handleOrgCreated} user={user} />
                 </div>
             </Theme>
         );

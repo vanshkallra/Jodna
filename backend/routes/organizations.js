@@ -7,6 +7,19 @@ const { v4: uuidv4 } = require('uuid');
 
 // @desc    Create Organization
 // @route   POST /api/organizations
+router.get('/my', protect, async (req, res) => {
+    try {
+        if (!req.user.organization) {
+            return res.status(404).json({ error: 'User does not belong to an organization' });
+        }
+        const org = await Organization.findById(req.user.organization);
+        res.json(org);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
 router.post('/', protect, async (req, res) => {
     try {
         // 1. Check if user already has an org

@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { ensureAuth, ensureRole } = require('../middleware/auth');
+
+const { protect, authorize } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 
 // @desc    Get all users in my organization
 // @route   GET /api/users
-router.get('/', ensureAuth, async (req, res) => {
+router.get('/', protect, async (req, res) => {
     try {
         const users = await User.find({ organization: req.user.organization }).sort({ displayName: 1 });
         res.json(users);
@@ -17,7 +18,7 @@ router.get('/', ensureAuth, async (req, res) => {
 
 // @desc    Update User Role (Admin Only)
 // @route   PUT /api/users/:id/role
-router.put('/:id/role', ensureAuth, ensureRole(['ADMIN']), async (req, res) => {
+router.put('/:id/role', protect, authorize('ADMIN'), async (req, res) => {
     try {
         const { role } = req.body;
 
