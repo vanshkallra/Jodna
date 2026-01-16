@@ -22,15 +22,22 @@ const generateToken = (id) => {
 
 // @desc    Google OAuth Callback (Exchange Code)
 // @route   POST /auth/google
+
+const redirecturi = "https://new.express.adobe.com/static/oauth-redirect.html";
+
 router.post('/google', async (req, res) => {
     try {
-        const { code, codeVerifier } = req.body; // Frontend sends code & verifier (PKCE)
+        console.log('[GoogleAuth] Request Received');
+        const { code, codeVerifier, redirectUri } = req.body; // Frontend sends code & verifier (PKCE)
+        console.log('[GoogleAuth] Code:', code ? 'Received' : 'Missing', 'Verifier:', codeVerifier ? 'Received' : 'Missing');
 
         // 1. Exchange code for tokens
         const { tokens } = await client.getToken({
             code,
             codeVerifier,
+            redirect_uri: redirecturi
         });
+
 
         const idToken = tokens.id_token;
         if (!idToken) {
@@ -46,14 +53,18 @@ router.post('/google', async (req, res) => {
 
         const { email, name, sub: googleId } = payload;
 
+        console.log(`[GoogleAuth] Processing login for: ${email}`);
+
         // 3. Find or Create User
         let user = await User.findOne({ email });
 
         if (user) {
+            console.log(`[GoogleAuth] User found: ${user._id}`);
             // Update googleId if missing? or just login
             // user.googleId = googleId; // if we want to store it
             // await user.save();
         } else {
+            console.log(`[GoogleAuth] Creating new user for: ${email}`);
             // Create new user
             // Password is required in our schema, lets generate a random one or modify schema
             // For now, generate a random secure-ish password
@@ -67,6 +78,7 @@ router.post('/google', async (req, res) => {
                 password: hashedPassword, // Dummy password for OAuth users
                 // googleId: googleId // Optional: add back to schema if needed
             });
+            console.log(`[GoogleAuth] New user created: ${user._id} (${user.email})`);
         }
 
         // 4. Return JWT

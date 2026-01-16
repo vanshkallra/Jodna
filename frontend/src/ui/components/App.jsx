@@ -4,8 +4,8 @@ import "@spectrum-web-components/theme/express/theme-light.js";
 
 import { Theme } from "@swc-react/theme";
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import "./App.css";
-import TestDashboard from "./TestDashboard";
 
 // Import your components
 import Header from "./Header";
@@ -14,6 +14,10 @@ import Home from "./Home";
 import Projects from "./Projects";
 import Tickets from "./Tickets";
 import Organization from "./Organization";
+import NoOrganizationMessage from "./NoOrganizationMessage";
+import Login from "./Login";
+
+const BACKEND_URL = '';
 
 const App = ({ addOnUISdk, sandboxProxy }) => {
     const [user, setUser] = useState(null);
@@ -22,89 +26,127 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        // Initialize and check authentication
-        const initializeApp = async () => {
-            try {
-                // Check if user is authenticated (you'll replace this with your OAuth logic)
-                const authStatus = await checkAuthStatus();
-                
-                if (authStatus) {
+    const getToken = () => localStorage.getItem('token');
+
+    const authConfig = () => {
+        const token = getToken();
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+    };
+
+    const fetchUserData = async () => {
+        try {
+            const token = getToken();
+            if (!token) return null;
+
+            const response = await axios.get(`${BACKEND_URL}/auth/me`, authConfig());
+            console.log('Fetched user data:', response.data); // Debug log
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('token');
+                setIsAuthenticated(false);
+                setUser(null);
+            }
+            return null;
+        }
+    };
+
+    const fetchOrganization = async (orgId) => {
+        // Returning a placeholder object with ID to satisfy frontend checks
+        return { _id: orgId };
+    };
+
+    const initializeApp = async () => {
+        setLoading(true);
+        try {
+            const token = getToken();
+            if (token) {
+                const userData = await fetchUserData();
+                if (userData) {
                     setIsAuthenticated(true);
-                    // Fetch user data from your backend
-                    const userData = await fetchUserData();
                     setUser(userData);
-                    
-                    // Fetch organization if user has one
+
                     if (userData.organization) {
                         const orgData = await fetchOrganization(userData.organization);
                         setOrganization(orgData);
                     }
+                } else {
+                    setIsAuthenticated(false);
                 }
-            } catch (error) {
-                console.error('Initialization error:', error);
-            } finally {
-                setLoading(false);
+            } else {
+                setIsAuthenticated(false);
             }
-        };
+        } catch (error) {
+            console.error('Initialization error:', error);
+            setIsAuthenticated(false);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         initializeApp();
     }, []);
 
-    // Mock functions - replace with your actual API calls
-    const checkAuthStatus = async () => {
-        // TODO: Check if user has valid OAuth token
-        // For now, return mock data
-        return true;
-    };
+    const handleLoginSuccess = async (data) => {
+        console.log('Login success data:', data); // Debug log
 
-    const fetchUserData = async () => {
-        // TODO: Fetch from your backend API
-        // const response = await fetch('YOUR_BACKEND_URL/api/user', {
-        //     credentials: 'include'
-        // });
-        // return await response.json();
-        
-        // Mock data for now
-        return {
-            id: '1',
-            googleId: 'google123',
-            email: 'user@example.com',
-            displayName: 'John Doe',
-            organization: null,
-            role: 'ADMIN' // Change to 'MANAGER' or 'DESIGNER' to test different views
+        // Store token if not already stored by Login component
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+        }
+
+        // Set authentication state immediately
+        setIsAuthenticated(true);
+
+        // Use the same structure as returned from backend
+        const userData = {
+            _id: data._id,
+            displayName: data.displayName,
+            email: data.email,
+            organization: data.organization,
+            role: data.role
         };
-    };
 
-    const fetchOrganization = async (orgId) => {
-        // TODO: Fetch organization data
-        // const response = await fetch(`YOUR_BACKEND_URL/api/organizations/${orgId}`, {
-        //     credentials: 'include'
-        // });
-        // return await response.json();
-        return null;
+        setUser(userData);
+
+        // Fetch organization if exists
+        if (data.organization) {
+            try {
+                const orgData = await fetchOrganization(data.organization);
+                setOrganization(orgData);
+            } catch (error) {
+                console.error('Error fetching organization:', error);
+            }
+        } else {
+            setOrganization(null);
+        }
+
+        // Force a re-render by setting loading state
+        setLoading(false);
     };
 
     const handleOrgCreated = async (org) => {
         setOrganization(org);
-        setUser({ ...user, organization: org.id });
-        
-        // TODO: Update user in backend
-        // await fetch(`YOUR_BACKEND_URL/api/users/${user.id}`, {
-        //     method: 'PATCH',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     credentials: 'include',
-        //     body: JSON.stringify({ organization: org.id })
-        // });
+
+        // Refresh user to get updated role and org ID
+        const userData = await fetchUserData();
+        if (userData) {
+            setUser(userData);
+        }
     };
 
     useEffect(() => {
         // Set default tab based on role
-        if (user && user.role === 'DESIGNER') {
-            setCurrentTab('Tickets');
-        } else if (user && organization) {
-            setCurrentTab('Projects');
-        }
+        if (!user) return;
+
+        // Force Projects for now
+        setCurrentTab('Projects');
     }, [user, organization]);
 
     // Show loading state
@@ -118,34 +160,19 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
         );
     }
 
-    // Show auth required (you'll replace this with OAuth flow)
+    // Show login page if not authenticated
     if (!isAuthenticated) {
         return (
             <Theme system="express" scale="medium" color="light">
-                <div className="container auth-container">
-                    <h2>Authentication Required</h2>
-                    <p>Please sign in to continue</p>
-                    <button onClick={() => {
-                        // TODO: Trigger OAuth flow
-                        console.log('Trigger OAuth');
-                    }}>
-                        Sign in with Google
-                    </button>
-                </div>
+                <Login onLoginSuccess={handleLoginSuccess} addOnUISdk={addOnUISdk} />
             </Theme>
         );
     }
 
-    // Show create organization page
-    if (!organization) {
-        return (
-            <Theme system="express" scale="medium" color="light">
-                <CreateOrganization onOrgCreated={handleOrgCreated} user={user} />
-            </Theme>
-        );
-    }
+    // Debug logging
+    console.log('Rendering authenticated view', { user, organization, isAuthenticated });
 
-    // Render main app with header and pages
+    // Authenticated + Has Organization (or no org check needed)
     const renderPage = () => {
         switch (currentTab) {
             case 'Projects':
@@ -162,10 +189,17 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     return (
         <Theme system="express" scale="medium" color="light">
             <div className="app-container">
-                <Header 
-                    currentTab={currentTab} 
-                    setCurrentTab={setCurrentTab} 
-                    user={user} 
+                <div style={{ position: 'fixed', bottom: 0, right: 0, background: 'rgba(0,0,0,0.8)', color: 'white', padding: 10, fontSize: 12, zIndex: 9999 }}>
+                    <p>Auth: {isAuthenticated ? 'Yes' : 'No'}</p>
+                    <p>User: {user ? user.email : 'None'}</p>
+                    <p>Role: {user ? user.role : 'None'}</p>
+                    <p>Org: {organization ? organization._id : 'None'}</p>
+                    <p>Tab: {currentTab}</p>
+                </div>
+                <Header
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
+                    user={user}
                 />
                 {renderPage()}
             </div>

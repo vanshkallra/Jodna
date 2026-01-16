@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import addOnUISdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = '';
 
 // --- PKCE Utilities ---
 function dec2hex(dec) {

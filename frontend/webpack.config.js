@@ -51,5 +51,15 @@ module.exports = {
     },
     resolve: {
         extensions: [".jsx", ".js", ".css"]
+    },
+    devServer: {
+        proxy: [
+            {
+                context: ['/auth', '/api'],
+                target: 'http://localhost:5000',
+                secure: false,
+                changeOrigin: true
+            }
+        ]
     }
 };

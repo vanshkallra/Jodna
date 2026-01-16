@@ -28,6 +28,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Routes
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 app.use('/auth', require('./routes/auth'));
 app.use('/api/organizations', require('./routes/organizations'));
 app.use('/api/users', require('./routes/users'));
