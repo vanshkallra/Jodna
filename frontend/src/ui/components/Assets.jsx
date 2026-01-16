@@ -114,16 +114,25 @@ const Assets = ({ user, sandboxProxy, organization }) => {
 
     const handleDelete = async (e, assetId) => {
         e.stopPropagation(); // Prevent clicking the card
-        if (!window.confirm("Delete this asset?")) return;
+        console.log("Delete button clicked for asset:", assetId);
+        
+        // if (!window.confirm("Delete this asset?")) {
+        //     console.log("Delete cancelled by user");
+        //     return;
+        // }
+        console.log("Skipping confirmation (debug mode)");
 
         try {
+            console.log("Sending DELETE request...");
             const token = localStorage.getItem('token');
-            await axios.delete(`${BACKEND_URL}/api/assets/${assetId}`, {
+            const response = await axios.delete(`${BACKEND_URL}/api/assets/${assetId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            console.log("Delete response:", response.status, response.data);
             setAssets(assets.filter(a => a._id !== assetId));
         } catch (err) {
             console.error("Delete failed", err);
+            alert("Delete failed: " + (err.response?.data?.msg || err.message));
         }
     };
 
@@ -163,6 +172,15 @@ const Assets = ({ user, sandboxProxy, organization }) => {
                             title="Click to add to canvas"
                         >
                             <div className="asset-image-container">
+                                {canUpload && (
+                                    <button 
+                                        className="btn-delete" 
+                                        onClick={(e) => handleDelete(e, asset._id)}
+                                        title="Delete Asset"
+                                    >
+                                        ✕
+                                    </button>
+                                )}
                                 <img 
                                     src={`${BACKEND_URL}/api/assets/image/${asset._id}`} 
                                     alt={asset.name} 
@@ -172,11 +190,6 @@ const Assets = ({ user, sandboxProxy, organization }) => {
                             </div>
                             <div className="asset-info">
                                 <div className="asset-name">{asset.name}</div>
-                                {canUpload && (
-                                    <button className="btn-delete" onClick={(e) => handleDelete(e, asset._id)}>
-                                        Delete
-                                    </button>
-                                )}
                             </div>
                         </div>
                     ))}

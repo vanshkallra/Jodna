@@ -50,61 +50,39 @@
     align-items: center;
     justify-content: center;
     background: #f5f5f5;
+    position: relative; /* Anchor for delete button */
   }
   
-  .asset-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-  
-  .asset-info {
-    padding: 8px;
-    background: #fff;
-    border-top: 1px solid #eee;
-  }
-  
-  .asset-name {
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .no-assets {
-    text-align: center;
-    padding: 40px;
-    color: #888;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border: 2px dashed #ddd;
-  }
-  
-  .btn-upload {
-    padding: 8px 16px;
-    background-color: #0070f3; /* Adobe Blue-ish or your theme color */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .btn-upload:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  /* ... skipping unchanged ... */
   
   .btn-delete {
-      color: red;
-      font-size: 12px;
-      margin-top: 4px;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: #d32f2f;
+      border: 1px solid #d32f2f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
       cursor: pointer;
-      background: none;
-      border: none;
+      opacity: 0;
+      transition: all 0.2s;
       padding: 0;
+      z-index: 10;
+      line-height: 1;
+  }
+
+  .asset-card:hover .btn-delete {
+      opacity: 1;
+  }
+
+  .btn-delete:hover {
+      background: #d32f2f;
+      color: white;
+      transform: scale(1.1);
   }

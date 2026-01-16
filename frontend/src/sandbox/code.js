@@ -30,9 +30,18 @@ function start() {
             insertionParent.children.append(rectangle);
         },
         createImage: async (blob) => {
-             const image = editor.createImageContainer(blob);
-             const insertionParent = editor.context.insertionParent;
-             insertionParent.children.append(image);
+            try {
+                const bitmapImage = await editor.loadBitmapImage(blob);
+                
+                // Wait for the async edit context to be available
+                await editor.queueAsyncEdit(() => {
+                    const imageContainer = editor.createImageContainer(bitmapImage);
+                    const insertionParent = editor.context.insertionParent;
+                    insertionParent.children.append(imageContainer);
+                });
+            } catch (error) {
+                console.error("Error creating image in sandbox:", error);
+            }
         }
     };
 

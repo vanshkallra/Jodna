@@ -127,20 +127,28 @@ router.get('/image/:id', async (req, res) => {
 // @desc    Delete an asset
 // @access  Private (Admin only)
 router.delete('/:id', protect, async (req, res) => {
+    console.log("DELETE /api/assets/:id request received");
+    console.log("Asset ID:", req.params.id);
+    console.log("User:", req.user ? req.user.id : "No User");
+
     try {
         const asset = await Asset.findById(req.params.id);
 
         if (!asset) {
+            console.log("Asset not found in DB");
             return res.status(404).json({ msg: 'Asset not found' });
         }
 
         // Check user permissions here if needed
+        // e.g. if (asset.uploadedBy.toString() !== req.user.id) ... 
 
+        console.log("Deleting asset...");
         await asset.deleteOne();
+        console.log("Asset deleted successfully");
 
         res.json({ msg: 'Asset removed' });
     } catch (err) {
-        console.error(err);
+        console.error("Error in DELETE /api/assets:", err);
         res.status(500).send('Server Error');
     }
 });
