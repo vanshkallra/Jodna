@@ -1,36 +1,48 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './CreateOrganization.css';
+
+const BACKEND_URL = '';
 
 const CreateOrganization = ({ onOrgCreated, user }) => {
   const [orgName, setOrgName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const getToken = () => localStorage.getItem('token');
+
+  const authConfig = () => {
+    const token = getToken();
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+  };
 
   const handleSubmit = async () => {
-    if (!orgName.trim()) return;
+    if (!orgName.trim()) {
+      setError('Organization name is required');
+      return;
+    }
     
     setLoading(true);
+    setError('');
     
-    // TODO: Replace with actual API call
-    // const response = await fetch('YOUR_BACKEND_URL/api/organizations', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   credentials: 'include',
-    //   body: JSON.stringify({ name: orgName, owner: user.id })
-    // });
-    // const newOrg = await response.json();
-    
-    // Simulate API call
-    setTimeout(() => {
-      const newOrg = {
-        id: 'org_' + Date.now(),
-        name: orgName,
-        owner: user.id,
-        inviteCode: Math.random().toString(36).substring(2, 10).toUpperCase(),
-        createdAt: new Date()
-      };
-      onOrgCreated(newOrg);
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/api/organizations`,
+        { name: orgName },
+        authConfig()
+      );
+      
+      // Call parent callback with new organization data
+      onOrgCreated(response.data);
+    } catch (err) {
+      console.error('Error creating organization:', err);
+      setError(err.response?.data?.message || 'Failed to create organization');
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -48,9 +60,14 @@ const CreateOrganization = ({ onOrgCreated, user }) => {
               className="form-input"
               placeholder="e.g., Acme Design Studio"
               value={orgName}
-              onChange={(e) => setOrgName(e.target.value)}
+              onChange={(e) => {
+                setOrgName(e.target.value);
+                setError('');
+              }}
               onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+              disabled={loading}
             />
+            {error && <p className="error-message">{error}</p>}
           </div>
           <button 
             onClick={handleSubmit}
