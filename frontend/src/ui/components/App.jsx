@@ -181,7 +181,7 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
         return (
             <Theme system="express" scale="medium" color="light">
                 <div className="app-container">
-                    <CreateOrganization onOrgCreated={handleOrgCreated} />
+                    <CreateOrganization onOrgCreated={handleOrgCreated} user={user} />
                 </div>
             </Theme>
         );
