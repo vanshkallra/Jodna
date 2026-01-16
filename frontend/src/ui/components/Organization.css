@@ -1,23 +1,23 @@
 .organization-container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 320px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 12px;
 }
 
 .organization-header {
   background: white;
   border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: 16px;
+  margin-bottom: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .header-text {
@@ -25,29 +25,32 @@
 }
 
 .organization-header h1 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #2c2c2c;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  line-height: 1.3;
 }
 
 .organization-header p {
-  font-size: 14px;
+  font-size: 13px;
   color: #6e6e6e;
   margin: 0;
+  line-height: 1.4;
 }
 
 .leave-org-button {
-  padding: 10px 20px;
+  padding: 8px 16px;
   background: #ffebee;
   color: #d32f2f;
   border: 1px solid #ffcdd2;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.2s ease;
-  white-space: nowrap;
+  width: 100%;
+  align-self: flex-start;
 }
 
 .leave-org-button:hover:not(:disabled) {
@@ -62,44 +65,46 @@
 
 .invite-section {
   background: #f5f5f5;
-  padding: 16px;
+  padding: 12px;
   border-radius: 6px;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .invite-section strong {
   display: block;
-  font-size: 13px;
+  font-size: 11px;
   color: #6e6e6e;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .invite-code {
   font-family: 'Courier New', monospace;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #1473e6;
   background: white;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border-radius: 6px;
   display: inline-block;
-  margin-top: 8px;
+  margin-top: 6px;
   letter-spacing: 1px;
+  word-break: break-all;
 }
 
 .invite-hint {
-  font-size: 13px;
+  font-size: 12px;
   color: #6e6e6e;
-  margin-top: 12px;
+  margin-top: 10px;
   margin-bottom: 0;
+  line-height: 1.4;
 }
 
 .members-section {
   background: white;
   border-radius: 8px;
-  padding: 24px;
+  padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -107,29 +112,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
+  gap: 8px;
 }
 
 .members-section h2 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #2c2c2c;
   margin: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .refresh-button {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 4px;
+  padding: 6px 10px;
   background: #f5f5f5;
   color: #2c2c2c;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .refresh-button:hover:not(:disabled) {
@@ -143,9 +152,10 @@
 }
 
 .refresh-button svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .refresh-button svg.spinning {
@@ -164,25 +174,25 @@
 .loading-members,
 .no-members {
   text-align: center;
-  padding: 40px 20px;
+  padding: 32px 16px;
   color: #6e6e6e;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .members-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .member-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 16px;
+  align-items: flex-start;
+  padding: 10px 12px;
   background: #fafafa;
   border-radius: 6px;
   transition: background 0.2s ease;
+  gap: 10px;
 }
 
 .member-card:hover {
@@ -191,44 +201,67 @@
 
 .member-info {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 10px;
   flex: 1;
+  min-width: 0;
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: linear-gradient(135deg, #1473e6 0%, #0d66d0 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
 }
 
+.member-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.member-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
 .member-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #2c2c2c;
-  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 auto;
 }
 
 .member-email {
-  font-size: 12px;
+  font-size: 11px;
   color: #6e6e6e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .role-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 9px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .role-admin {
@@ -258,14 +291,14 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 16px;
+  padding: 12px;
 }
 
 .modal-content {
   background: white;
   border-radius: 12px;
   width: 100%;
-  max-width: 400px;
+  max-width: 320px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.2s ease;
 }
@@ -282,51 +315,53 @@
 }
 
 .modal-header {
-  padding: 24px 24px 0;
+  padding: 18px 16px 0;
 }
 
 .modal-header h2 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #2c2c2c;
   margin: 0;
 }
 
 .modal-body {
-  padding: 20px 24px;
+  padding: 16px;
 }
 
 .modal-body p {
-  font-size: 14px;
+  font-size: 13px;
   color: #2c2c2c;
-  margin: 0 0 12px 0;
+  margin: 0 0 10px 0;
   line-height: 1.5;
 }
 
 .warning-text {
-  font-size: 13px;
+  font-size: 12px;
   color: #d32f2f;
   background: #ffebee;
-  padding: 12px;
+  padding: 10px;
   border-radius: 6px;
-  margin-top: 12px;
+  margin-top: 10px;
+  line-height: 1.4;
 }
 
 .modal-actions {
   display: flex;
-  gap: 12px;
-  padding: 0 24px 24px;
+  gap: 10px;
+  padding: 0 16px 16px;
   justify-content: flex-end;
 }
 
 .modal-button {
-  padding: 10px 20px;
+  padding: 9px 16px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
+  flex: 1;
 }
 
 .cancel-button {

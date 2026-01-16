@@ -96,8 +96,8 @@ const Organization = ({ organization, user, onLeave }) => {
               title="Refresh members list"
             >
               <svg 
-                width="14" 
-                height="14" 
+                width="12" 
+                height="12" 
                 viewBox="0 0 16 16" 
                 fill="none" 
                 xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +111,7 @@ const Organization = ({ organization, user, onLeave }) => {
                   strokeLinejoin="round"
                 />
               </svg>
-              {refreshing ? 'Refreshing...' : 'Refresh'}
+              {refreshing ? '...' : ''}
             </button>
           )}
         </div>
@@ -127,14 +127,16 @@ const Organization = ({ organization, user, onLeave }) => {
                   <div className="user-avatar">
                     {member.displayName ? member.displayName.charAt(0).toUpperCase() : '?'}
                   </div>
-                  <div>
-                    <div className="member-name">{member.displayName}</div>
+                  <div className="member-details">
+                    <div className="member-name-row">
+                      <div className="member-name">{member.displayName}</div>
+                      <span className={`role-badge role-${member.role?.toLowerCase()}`}>
+                        {member.role}
+                      </span>
+                    </div>
                     <div className="member-email">{member.email}</div>
                   </div>
                 </div>
-                <span className={`role-badge role-${member.role?.toLowerCase()}`}>
-                  {member.role}
-                </span>
               </div>
             ))}
           </div>
