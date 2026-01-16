@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Header.css';
 
-const Header = ({ currentTab, setCurrentTab, user,onLogout }) => {
+const Header = ({ currentTab, setCurrentTab, user, onLogout }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNavMenu, setShowNavMenu] = useState(true); // Start with nav menu open
   const headerRef = useRef(null);
   const profileMenuRef = useRef(null);
-  
+
   const tabs = [];
-  
+
   // Role-based tab visibility
   if (user.role === 'ADMIN' || user.role === 'MANAGER') {
     tabs.push('Projects', 'Tickets', 'Organization');
   } else if (user.role === 'DESIGNER') {
-    tabs.push('Tickets');
+    tabs.push('Tickets', 'Organization');
   }
 
   const handleTabChange = (tab) => {
@@ -30,7 +30,7 @@ const Header = ({ currentTab, setCurrentTab, user,onLogout }) => {
           setShowProfileMenu(false);
         }
       }
-      
+
       if (headerRef.current && !headerRef.current.contains(event.target)) {
         setShowNavMenu(false);
       }
@@ -48,7 +48,7 @@ const Header = ({ currentTab, setCurrentTab, user,onLogout }) => {
     <header className="header" ref={headerRef}>
       {/* Top section with profile and hamburger */}
       <div className="header-top">
-        <button 
+        <button
           className="profile-button"
           onClick={() => {
             setShowProfileMenu(!showProfileMenu);
@@ -60,8 +60,8 @@ const Header = ({ currentTab, setCurrentTab, user,onLogout }) => {
             {user.displayName.charAt(0).toUpperCase()}
           </div>
         </button>
-        
-        <button 
+
+        <button
           className="hamburger-button"
           onClick={() => {
             setShowNavMenu(!showNavMenu);
@@ -70,7 +70,7 @@ const Header = ({ currentTab, setCurrentTab, user,onLogout }) => {
           aria-label="Menu"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
       </div>
@@ -96,14 +96,14 @@ const Header = ({ currentTab, setCurrentTab, user,onLogout }) => {
             Settings
           </button>
           <button
-                className="profile-menu-item"
-                onClick={() => {
-                    setShowProfileMenu(false); // existing behavior
-                    onLogout();                 // log out the user
-                }}
-            >
-                Sign Out
-            </button>
+            className="profile-menu-item"
+            onClick={() => {
+              setShowProfileMenu(false); // existing behavior
+              onLogout();                 // log out the user
+            }}
+          >
+            Sign Out
+          </button>
         </div>
       )}
 

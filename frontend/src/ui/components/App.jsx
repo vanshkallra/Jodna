@@ -162,6 +162,15 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
         }
     };
 
+    const handleOrgLeft = async () => {
+        setOrganization(null);
+        // Refresh user to get updated role (reset to DESIGNER) and org ID (null)
+        const userData = await fetchUserData();
+        if (userData) {
+            setUser(userData);
+        }
+    };
+
     useEffect(() => {
         // Set default tab based on role
         if (!user) return;
@@ -229,7 +238,7 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
             case 'Tickets':
                 return <Tickets user={user} />;
             case 'Organization':
-                return <Organization organization={organization} user={user} />;
+                return <Organization organization={organization} user={user} onLeave={handleOrgLeft} />;
             default:
                 return <Home user={user} organization={organization} />;
         }

@@ -72,4 +72,33 @@ router.post('/join', protect, async (req, res) => {
     }
 });
 
+// @desc    Leave Organization
+// @route   POST /api/organizations/leave
+router.post('/leave', protect, async (req, res) => {
+    try {
+        if (!req.user.organization) {
+            return res.status(400).json({ error: 'User is not in an organization' });
+        }
+
+        // Check if user is owner
+        const org = await Organization.findById(req.user.organization);
+
+        // If org exists and user is owner
+        if (org && org.owner.toString() === req.user.id) {
+            return res.status(400).json({ error: 'Owners cannot leave their organization. You must delete it or transfer ownership.' });
+        }
+
+        // Remove user from org
+        await User.findByIdAndUpdate(req.user.id, {
+            organization: null,
+            role: 'DESIGNER' // Reset to default role
+        });
+
+        res.json({ message: 'Successfully left organization' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;

@@ -9,7 +9,7 @@
   border-radius: 8px;
   padding: 32px;
   margin-bottom: 32px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .organization-header h1 {
@@ -42,7 +42,7 @@
   background: white;
   border-radius: 8px;
   padding: 32px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .members-section h2 {
@@ -91,17 +91,17 @@
   font-weight: 500;
 }
 
-.role-admin { 
-  background: #ffebee; 
-  color: #c62828; 
+.role-admin {
+  background: #ffebee;
+  color: #c62828;
 }
 
-.role-manager { 
-  background: #fff3e0; 
-  color: #f57c00; 
+.role-manager {
+  background: #fff3e0;
+  color: #f57c00;
 }
 
-.role-designer { 
-  background: #e8f5e9; 
-  color: #388e3c; 
+.role-designer {
+  background: #e8f5e9;
+  color: #388e3c;
 }
