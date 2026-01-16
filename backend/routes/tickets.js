@@ -22,6 +22,11 @@ router.get('/', protect, async (req, res) => {
             query.project = req.query.project;
         }
 
+        // Restrict Designers to their own tickets
+        if (req.user.role === 'DESIGNER') {
+            query.assignee = req.user.id;
+        }
+
         const tickets = await Ticket.find(query)
             .populate('assignee', 'displayName email')
             .populate('created_by', 'displayName')
