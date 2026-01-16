@@ -15,13 +15,18 @@ const ensureRole = (roles) => (req, res, next) => {
 // @route   GET /api/projects
 router.get('/', protect, async (req, res) => {
     try {
+        // Check if user has an organization
+        if (!req.user.organization) {
+            return res.json([]); // Return empty array if no organization
+        }
+
         const projects = await Project.find({ organization: req.user.organization })
             .populate('created_by', 'displayName')
             .sort({ updated_at: -1 });
         res.json(projects);
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
+        console.error('Error fetching projects:', err);
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
