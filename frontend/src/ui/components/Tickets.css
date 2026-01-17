@@ -197,10 +197,10 @@
   padding: 0 24px 24px;
 }
 
-/* Modern 2-Col Modal Override */
+/* Modern Single Column Modal for 320px */
 .modal-content.ticket-detail-modal {
-  width: 900px;
-  max-width: 95vw;
+  width: 100%;
+  max-width: 320px;
   padding: 0;
   overflow: hidden;
   height: auto;
@@ -210,16 +210,34 @@
 }
 
 .ticket-detail-modal .modal-header {
-  padding: 20px 24px;
+  padding: 16px;
   border-bottom: 1px solid #eee;
   background: #fff;
 }
 
+.ticket-detail-modal .modal-header h2 {
+  font-size: 16px;
+  margin: 0;
+  word-break: break-word;
+}
+
 .ticket-modal-body {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   overflow-y: auto;
   flex: 1;
+  max-height: calc(90vh - 70px);
+}
+
+.ticket-left-col {
+  width: 100%;
+  padding: 0;
+}
+
+.ticket-right-col {
+  width: 100%;
+  padding: 0;
+  background: transparent;
   /* Take remaining height */
   max-height: calc(90vh - 70px);
   /* fallback */
