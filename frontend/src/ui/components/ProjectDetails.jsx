@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import './Projects.css';
 import './Tickets.css'; // Import shared ticket styles
@@ -319,6 +320,7 @@ const ProjectDetails = ({ project, user, onBack, sandboxProxy }) => {
     const [previewImageName, setPreviewImageName] = useState(null);
     const [editingDescription, setEditingDescription] = useState(false);
     const [tempDescription, setTempDescription] = useState('');
+    const [statusFilter, setStatusFilter] = useState('All');
 
     // New Ticket State
     const [newTicket, setNewTicket] = useState({
@@ -997,11 +999,32 @@ const ProjectDetails = ({ project, user, onBack, sandboxProxy }) => {
     // Helper to get initials
     const getInitials = (name) => name ? name.charAt(0).toUpperCase() : '?';
 
+    const filteredTickets = tickets.filter(ticket => {
+        if (statusFilter === 'All') return true;
+        return ticket.status === statusFilter;
+    });
+
     return (
         <div className="project-details-container">
             <div className="project-header">
-                <button className="back-button" onClick={onBack}>
-                    &larr; Back to Projects
+                <button 
+                    className="back-button" 
+                    onClick={onBack} 
+                    style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        width: '32px',
+                        height: '32px',
+                        padding: 0,
+                        border: 'none',
+                        background: 'transparent',
+                        color: '#0366d6', // Blue color requested
+                        cursor: 'pointer'
+                    }}
+                    title="Back to Projects"
+                >
+                    <ArrowLeft size={24} />
                 </button>
                 <div className="project-title-row">
                     <h1>{project.name}</h1>
@@ -1015,16 +1038,40 @@ const ProjectDetails = ({ project, user, onBack, sandboxProxy }) => {
             </div>
 
             <div className="tickets-section">
-                <h2>Tickets ({tickets.length})</h2>
+                <div className="tickets-header" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                    <h2 style={{ margin: 0 }}>Tickets ({filteredTickets.length})</h2>
+                    <div className="filter-controls">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            style={{
+                                padding: '6px 12px',
+                                fontSize: '13px',
+                                borderRadius: '6px',
+                                border: '1px solid #e1e4e8',
+                                backgroundColor: '#ffffff',
+                                cursor: 'pointer',
+                                outline: 'none'
+                            }}
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Open">Open</option>
+                            <option value="InProgress">In Progress</option>
+                            <option value="Review">Review</option>
+                            <option value="Done">Done</option>
+                        </select>
+                    </div>
+                </div>
+
                 {ticketsLoading ? (
                     <p>Loading tickets...</p>
-                ) : tickets.length === 0 ? (
+                ) : filteredTickets.length === 0 ? (
                     <div className="no-tickets">
-                        <p>No tickets in this project yet.</p>
+                        <p>{statusFilter === 'All' ? 'No tickets in this project yet.' : `No tickets with status "${statusFilter}".`}</p>
                     </div>
                 ) : (
                     <div className="tickets-list">
-                        {tickets.map(ticket => (
+                        {filteredTickets.map(ticket => (
                             <div
                                 key={ticket._id}
                                 className="ticket-card"
@@ -1038,9 +1085,64 @@ const ProjectDetails = ({ project, user, onBack, sandboxProxy }) => {
                                         <span>Updated {ticket.updated_at ? new Date(ticket.updated_at).toLocaleDateString() : '—'}</span>
                                     </div>
                                 </div>
-                                <span className={`status-badge status-${ticket.status.toLowerCase()}`}>
-                                    {ticket.status}
-                                </span>
+                                <div className="ticket-card-right" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                                    {canUpdateStatus(ticket) ? (
+                                        <select
+                                            className={`status-select ${ticket.status.toLowerCase()}`}
+                                            value={ticket.status}
+                                            onChange={(e) => handleStatusChange(ticket._id, e.target.value)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            style={{
+                                                padding: '4px 8px',
+                                                fontSize: '11px',
+                                                borderRadius: '12px',
+                                                border: '1px solid #e1e4e8',
+                                                cursor: 'pointer',
+                                                fontWeight: '600',
+                                                height: 'auto',
+                                                lineHeight: '1',
+                                                appearance: 'none',
+                                                backgroundPosition: 'right 4px center',
+                                                paddingRight: '20px'
+                                            }}
+                                        >
+                                            <option value="Open">Open</option>
+                                            <option value="InProgress">In Progress</option>
+                                            <option value="Review">Review</option>
+                                            <option value="Done">Done</option>
+                                        </select>
+                                    ) : (
+                                        <span className={`status-badge status-${ticket.status.toLowerCase()}`}>
+                                            {ticket.status}
+                                        </span>
+                                    )}
+                                    {canDeleteTicket && (
+                                        <button 
+                                            className="icon-btn delete-ticket-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowDeleteConfirm(ticket._id);
+                                            }}
+                                            title="Delete Ticket"
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                color: '#d73a49',
+                                                padding: '4px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                opacity: 0.6,
+                                                transition: 'opacity 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => e.target.style.opacity = 1}
+                                            onMouseLeave={(e) => e.target.style.opacity = 0.6}
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -1054,11 +1156,52 @@ const ProjectDetails = ({ project, user, onBack, sandboxProxy }) => {
 
                         <div className="modal-header">
                             <h2>{selectedTicket.title}</h2>
-                            <div className="header-actions">
-                                <span className={`status-badge status-${selectedTicket.status.toLowerCase()}`}>
-                                    {selectedTicket.status}
-                                </span>
-                                <button className="close-btn" onClick={closeTicketModal}>&times;</button>
+                            <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                {canUpdateStatus(selectedTicket) ? (
+                                    <select
+                                        className={`status-select ${selectedTicket.status.toLowerCase()}`}
+                                        value={selectedTicket.status}
+                                        onChange={(e) => handleStatusChange(selectedTicket._id, e.target.value)}
+                                        style={{
+                                            padding: '6px 10px',
+                                            fontSize: '12px',
+                                            borderRadius: '6px',
+                                            border: '1px solid #ddd',
+                                            cursor: 'pointer',
+                                            fontWeight: '600'
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <option value="Open">Open</option>
+                                        <option value="InProgress">In Progress</option>
+                                        <option value="Review">Review</option>
+                                        <option value="Done">Done</option>
+                                    </select>
+                                ) : (
+                                    <span className={`status-badge status-${selectedTicket.status.toLowerCase()}`}>
+                                        {selectedTicket.status}
+                                    </span>
+                                )}
+                                
+                                {canDeleteTicket && (
+                                     <button
+                                        className="icon-btn"
+                                        onClick={() => setShowDeleteConfirm(selectedTicket._id)}
+                                        title="Delete Ticket"
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            color: '#d73a49',
+                                            padding: '4px',
+                                            display: 'flex'
+                                        }}
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                )}
+
+                                <button className="close-btn" onClick={closeTicketModal} style={{ fontSize: '24px', lineHeight: '1', background: 'none', border: 'none', cursor: 'pointer', color: '#586069' }}>&times;</button>
                             </div>
                         </div>
 
@@ -1360,76 +1503,6 @@ const ProjectDetails = ({ project, user, onBack, sandboxProxy }) => {
                                         )}
                                     </div>
                                 )}
-
-                                {/* Actions */}
-                                <div className="modal-section actions-section" style={{ marginBottom: '16px' }}>
-                                    <h4 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600', color: '#24292e' }}>Actions</h4>
-                                    <div className="actions-row" style={{
-                                        display: 'flex',
-                                        gap: '12px',
-                                        alignItems: 'center',
-                                        flexWrap: 'wrap'
-                                    }}>
-                                        {canUpdateStatus(selectedTicket) && (
-                                            <select
-                                                className="status-select"
-                                                value={selectedTicket.status}
-                                                onChange={(e) => handleStatusChange(selectedTicket._id, e.target.value)}
-                                                style={{
-                                                    padding: '8px 12px',
-                                                    fontSize: '13px',
-                                                    borderRadius: '6px',
-                                                    border: '1px solid #d1d5db',
-                                                    backgroundColor: '#ffffff',
-                                                    color: '#24292e',
-                                                    cursor: 'pointer',
-                                                    fontWeight: '500',
-                                                    transition: 'all 0.2s ease',
-                                                    outline: 'none',
-                                                    minWidth: '140px'
-                                                }}
-                                                onFocus={(e) => e.target.style.borderColor = '#0366d6'}
-                                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                                            >
-                                                <option value="Open">Open</option>
-                                                <option value="InProgress">In Progress</option>
-                                                <option value="Review">Review</option>
-                                                <option value="Done">Done</option>
-                                            </select>
-                                        )}
-                                        {canDeleteTicket && (
-                                            <button
-                                                className="btn-icon delete-btn"
-                                                onClick={() => setShowDeleteConfirm(selectedTicket._id)}
-                                                style={{
-                                                    padding: '8px 16px',
-                                                    fontSize: '13px',
-                                                    borderRadius: '6px',
-                                                    border: '1px solid #d73a49',
-                                                    backgroundColor: '#ffffff',
-                                                    color: '#d73a49',
-                                                    cursor: 'pointer',
-                                                    fontWeight: '500',
-                                                    transition: 'all 0.2s ease',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '6px'
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.target.style.backgroundColor = '#d73a49';
-                                                    e.target.style.color = '#ffffff';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.target.style.backgroundColor = '#ffffff';
-                                                    e.target.style.color = '#d73a49';
-                                                }}
-                                            >
-                                                <span>&#128465;</span>
-                                                <span>Delete</span>
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
                             </div>
 
                             {/* RIGHT COLUMN: Content (Todos + Attachments) */}

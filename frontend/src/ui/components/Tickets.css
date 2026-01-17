@@ -103,7 +103,7 @@
   font-size: 14px;
   font-weight: 600;
   color: #2c2c2c;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   line-height: 1.4;
@@ -294,6 +294,10 @@
   width: 100%;
   padding: 16px;
   box-sizing: border-box;
+}
+
+.ticket-left-col > .modal-section:first-child {
+  margin-top: 0;
 }
 
 .ticket-right-col {
