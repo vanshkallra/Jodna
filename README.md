@@ -148,7 +148,7 @@ It removes friction from feedback cycles, asset sharing, and revisions while sta
 
 1.Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/JODNA.git
+git clone https://github.com/Sparshkalia/Jodna.git
 cd JODNA
 ```
 
